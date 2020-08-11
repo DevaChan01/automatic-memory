@@ -1,0 +1,2167 @@
+#include <X11/Xlib.h>
+#include <unistd.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include "gfx.h"
+#include <signal.h>
+#include <time.h>
+
+void display_GUI(int xsize, int ysize);
+void delay(unsigned int number_of_seconds);
+void display_level1();
+void Pedestrian_Crossing_Upper_Line();
+void Pedestrian_Crossing_Lower_Line();
+void display_level2_UpperPedestrian();
+void display_level2_LowerPedestrian();
+void stop_car_UP();
+void Car_LefttoRight();
+void car_UPtoDown();
+void car_RightToLeft();
+void car_DowntoUp();
+void stop_car_Left();
+void stop_car_Down();
+void Stop_Car_Right();
+//void check_pedestrian();
+
+
+int main()
+{
+    int xsize = 900;
+    int ysize = 900;
+    int xcoor,ycoor;
+    char c;
+
+   display_GUI(xsize,ysize);
+
+    while(1) {
+      //wait to get user input
+      c = gfx_wait();
+      xcoor=gfx_xpos();
+      ycoor=gfx_ypos();
+      printf("x = %d, y = %d\n", xcoor,ycoor);
+
+      while(gfx_xpos()>=20&&gfx_xpos()<=100&&gfx_ypos()>=25&&gfx_ypos()<=65)
+            {
+                gfx_color(0,255,0);
+                gfx_fillrectangle(20,25,80,40);
+                display_level1(gfx_xpos(),gfx_ypos());
+                gfx_flush();
+                delay(3);
+                gfx_color(255,0,0);
+                gfx_fillrectangle(20,25,80,40); 
+                gfx_flush();
+                //break;                    
+            }
+               
+    }
+   
+   
+
+    return 0;
+}
+
+  void display_GUI(int xsize, int ysize) {
+ 
+    char startbutton[100]="    START    ";
+    //char stopbutton[100]="      STOP    ";
+   
+
+    // Open a new window for drawing.
+    gfx_open(xsize,ysize,"SMART TRAFFIC LIGHT SIMULATOR");
+
+    gfx_clear_color(255,255,255);
+    gfx_clear();
+  
+   // horizontal road
+    gfx_color(0,0,0);
+    gfx_fillrectangle(0,300,900,300);
+  
+    // vertical road
+    gfx_color(0,0,0);
+    gfx_fillrectangle(300,0,300,900);
+  
+    // left divider
+    gfx_color(255,255,255);
+    gfx_fillrectangle(0,450,300,5);
+ 
+    gfx_color(255,255,255);
+    gfx_fillrectangle(0,375,10,5);
+    gfx_color(255,255,255);
+    gfx_fillrectangle(40,375,10,5);
+    gfx_color(255,255,255);
+    gfx_fillrectangle(80,375,10,5);
+    gfx_color(255,255,255);
+    gfx_fillrectangle(120,375,10,5);
+    gfx_color(255,255,255);
+    gfx_fillrectangle(160,375,10,5);
+    gfx_color(255,255,255);
+    gfx_fillrectangle(200,375,10,5);
+    gfx_color(255,255,255);
+    gfx_fillrectangle(240,375,10,5);
+ 
+
+    gfx_color(255,255,255);
+    gfx_fillrectangle(0,525,10,5);
+    gfx_color(255,255,255);
+    gfx_fillrectangle(40,525,10,5);
+    gfx_color(255,255,255);
+    gfx_fillrectangle(80,525,10,5);
+    gfx_color(255,255,255);
+    gfx_fillrectangle(120,525,10,5);
+    gfx_color(255,255,255);
+    gfx_fillrectangle(160,525,10,5);
+    gfx_color(255,255,255);
+    gfx_fillrectangle(200,525,10,5);
+    gfx_color(255,255,255);
+    gfx_fillrectangle(240,525,10,5);
+
+   
+
+
+    // right divider
+    gfx_color(255,255,255);
+    gfx_fillrectangle(600,450,300,5);
+
+  
+    gfx_color(255,255,255);
+    gfx_fillrectangle(640,375,10,5);
+    gfx_color(255,255,255);
+    gfx_fillrectangle(680,375,10,5);
+    gfx_color(255,255,255);
+    gfx_fillrectangle(720,375,10,5);
+    gfx_color(255,255,255);
+    gfx_fillrectangle(760,375,10,5);
+    gfx_color(255,255,255);
+    gfx_fillrectangle(800,375,10,5);
+    gfx_color(255,255,255);
+    gfx_fillrectangle(840,375,10,5);
+    gfx_color(255,255,255);
+    gfx_fillrectangle(880,375,10,5);
+
+   
+    gfx_color(255,255,255);
+    gfx_fillrectangle(640,525,10,5);
+    gfx_color(255,255,255);
+    gfx_fillrectangle(680,525,10,5);
+    gfx_color(255,255,255);
+    gfx_fillrectangle(720,525,10,5);
+    gfx_color(255,255,255);
+    gfx_fillrectangle(760,525,10,5);
+    gfx_color(255,255,255);
+    gfx_fillrectangle(800,525,10,5);
+    gfx_color(255,255,255);
+    gfx_fillrectangle(840,525,10,5);
+    gfx_color(255,255,255);
+    gfx_fillrectangle(880,525,10,5);
+   
+   
+   
+   
+
+    // top divider
+    gfx_color(255,255,255); //white color
+    gfx_fillrectangle(450,0,5,249);  
+   
+    gfx_color(255,255,255);
+    gfx_fillrectangle(375,0,5,10);
+    gfx_color(255,255,255);
+    gfx_fillrectangle(375,40,5,10);
+    gfx_color(255,255,255);
+    gfx_fillrectangle(375,80,5,10);
+    gfx_color(255,255,255);
+    gfx_fillrectangle(375,120,5,10);
+    gfx_color(255,255,255);
+    gfx_fillrectangle(375,160,5,10);
+    gfx_color(255,255,255);
+    gfx_fillrectangle(375,200,5,10);
+
+    gfx_color(255,255,255);
+    gfx_fillrectangle(525,0,5,10);
+    gfx_color(255,255,255);
+    gfx_fillrectangle(525,40,5,10);
+    gfx_color(255,255,255);
+    gfx_fillrectangle(525,80,5,10);
+    gfx_color(255,255,255);
+    gfx_fillrectangle(525,120,5,10);
+    gfx_color(255,255,255);
+    gfx_fillrectangle(525,160,5,10);
+    gfx_color(255,255,255);
+    gfx_fillrectangle(525,200,5,10);
+  
+
+    // bottom divider
+    gfx_color(255,255,255); // white color
+    gfx_fillrectangle(450,651,5,249);
+ 
+    gfx_color(255,255,255);
+    gfx_fillrectangle(375,680,5,10);
+    gfx_color(255,255,255);
+    gfx_fillrectangle(375,720,5,10);
+    gfx_color(255,255,255);
+    gfx_fillrectangle(375,760,5,10);
+    gfx_color(255,255,255);
+    gfx_fillrectangle(375,800,5,10);
+    gfx_color(255,255,255);
+    gfx_fillrectangle(375,840,5,10);
+    gfx_color(255,255,255);
+    gfx_fillrectangle(375,880,5,10);
+
+    gfx_color(255,255,255);
+    gfx_fillrectangle(525,680,5,10);
+    gfx_color(255,255,255);
+    gfx_fillrectangle(525,720,5,10);
+    gfx_color(255,255,255);
+    gfx_fillrectangle(525,760,5,10);
+    gfx_color(255,255,255);
+    gfx_fillrectangle(525,800,5,10);
+    gfx_color(255,255,255);
+    gfx_fillrectangle(525,840,5,10);
+    gfx_color(255,255,255);
+    gfx_fillrectangle(525,880,5,10);
+  
+  
+   
+   Pedestrian_Crossing_Upper_Line();
+   
+   Pedestrian_Crossing_Lower_Line();
+
+   
+   // north traffic light (left)
+    gfx_color(100,100,100);
+    gfx_fillrectangle(150,250,130,40);
+    gfx_color(255,0,0);
+    gfx_circle(260,270,20);
+    gfx_color(255,255,0);
+    gfx_circle(225,270,20);
+    gfx_color(0,255,0);
+    gfx_circle(185,270,20);
+ 
+   // north traffic light (right)
+    gfx_color(100,100,100);
+    gfx_fillrectangle(610,160,40,130);
+    gfx_color(0,255,0);
+    gfx_circle(630,185,20);
+    gfx_color(255,255,0);
+    gfx_circle(630,220,20);
+    gfx_color(255,0,0);
+    gfx_circle(630,255,20);
+
+
+   // south traffic light (left)
+    gfx_color(100,100,100);
+    gfx_fillrectangle(250,610,40,130);
+    gfx_color(255,0,0);
+    gfx_circle(270,635,20);
+    gfx_color(255,255,0);
+    gfx_circle(270,670,20);
+    gfx_color(0,255,0);
+    gfx_circle(270,710,20);
+
+    // south traffic light (right)
+    gfx_color(100,100,100);
+    gfx_fillrectangle(610,610,130,40);
+    gfx_color(255,0,0);
+    gfx_circle(635,630,20);
+    gfx_color(255,255,0);
+    gfx_circle(670,630,20);
+    gfx_color(0,255,0);
+    gfx_circle(705,630,20);
+
+    //Start button
+    gfx_color(255,0,0);
+    gfx_fillrectangle(20,25,80,40);
+    gfx_color(0,0,0);
+    gfx_text(startbutton,20,20);
+    gfx_flush();
+
+    //Pedestrian crossing(upper part) button
+    gfx_color(0,0,0);
+    gfx_fillrectangle(666,254,40,40);
+    //gfx_color(0,0,0);
+    //gfx_text(stopbutton,110,20);
+    gfx_color(255,0,0);
+    gfx_fillcircle(685,272,30);
+    gfx_flush();
+
+    //Pedestrian crossing(lower part) button
+    gfx_color(0,0,0);
+    gfx_fillrectangle(206,695,40,40);
+    //gfx_color(0,0,0);
+    //gfx_text(stopbutton,110,20);
+    gfx_color(255,0,0);
+    gfx_fillcircle(226,715,30);
+    gfx_flush();
+     
+  return;
+   }
+ //----------------------------------------------------//
+
+ void Pedestrian_Crossing_Upper_Line() {
+   // pedestrian crossing upper part
+    gfx_color(255,255,0);
+    gfx_fillrectangle(310,250,20,40);   
+    gfx_color(255,255,0);
+    gfx_fillrectangle(360,250,20,40);
+    gfx_color(255,255,0);
+    gfx_fillrectangle(410,250,20,40);   
+    gfx_color(255,255,0);
+    gfx_fillrectangle(460,250,20,40);
+    gfx_color(255,255,0);
+    gfx_fillrectangle(510,250,20,40);   
+    gfx_color(255,255,0);
+    gfx_fillrectangle(560,250,20,40);
+}
+
+ 
+  void Pedestrian_Crossing_Lower_Line() {
+   // pedestrian crossing lower part
+    gfx_color(255,255,0);
+    gfx_fillrectangle(310,620,20,40);   
+    gfx_color(255,255,0);
+    gfx_fillrectangle(360,620,20,40);
+    gfx_color(255,255,0);
+    gfx_fillrectangle(410,620,20,40);   
+    gfx_color(255,255,0);
+    gfx_fillrectangle(460,620,20,40);
+    gfx_color(255,255,0);
+    gfx_fillrectangle(510,620,20,40);   
+    gfx_color(255,255,0);
+    gfx_fillrectangle(560,620,20,40);
+
+}
+
+    void delay(unsigned int number_of_seconds){
+    // Converting time into milliseconds
+        unsigned int milli_seconds = 100000 * number_of_seconds;
+
+    // Storing start time
+    clock_t start_time = clock();
+  
+    // looping till required time is not acheived
+    while (clock() < start_time + milli_seconds);
+     } 
+
+void display_level1(){
+ 
+ 
+    int action; 
+  // North(right) = GREEN
+ //---------------------------------------------------//
+   //ALL RED ON
+    gfx_color(255,0,0);
+    gfx_fillcircle(630,255,20);    //North right
+    gfx_color(255,0,0);
+    gfx_fillcircle(260,270,20);    //North left
+    gfx_color(255,0,0);
+    gfx_fillcircle(635,630,20);    //South right
+    gfx_color(255,0,0);
+    gfx_fillcircle(270,635,20);    //South left
+    gfx_flush();
+    stop_car_UP();
+    //delay(10);
+
+    //RED OFF
+    gfx_color(160,160,160);
+    gfx_fillcircle(630,255,20);  
+    gfx_flush();
+   
+
+    //GREEN ON
+    gfx_color(0,255,0);
+    gfx_fillcircle(630,185,20);
+    gfx_flush();
+    car_UPtoDown();  // ================================//
+    //delay(50);
+  
+    //GREEN OFF
+    gfx_color(160,160,160);
+    gfx_fillcircle(630,185,20);
+    gfx_flush();
+
+    //YELLOW ON
+    gfx_color(255,255,0);
+    gfx_fillcircle(630,220,20);
+    gfx_flush();
+    delay(10);
+  
+    //YELLOW OFF
+    gfx_color(160,160,160);
+    gfx_fillcircle(630,220,20);
+    gfx_flush();
+
+    //RED ON
+    gfx_color(255,0,0);
+    gfx_fillcircle(630,255,20);
+    gfx_flush();
+    delay(10);
+
+    if (gfx_event_waiting()) {
+    action=gfx_wait(); 
+ 
+      if(action == (gfx_xpos()>=672&&gfx_xpos()<=700&&gfx_ypos()>=259&&gfx_ypos()<=287))
+         display_level2_UpperPedestrian();
+    }
+ 
+   //---------------------------------------------------//
+
+ 
+   // North(left) = GREEN
+ 
+    //ALL RED ON
+    gfx_color(255,0,0);
+    gfx_fillcircle(630,255,20);    //North right
+    gfx_color(255,0,0);
+    gfx_fillcircle(260,270,20);    //North left
+    gfx_color(255,0,0);
+    gfx_fillcircle(635,630,20);    //South right
+    gfx_color(255,0,0);
+    gfx_fillcircle(270,635,20);    //South left
+    gfx_flush();
+    //stop_car_Left();
+    
+                  //---------=-=-=-=-=-==-=-=-//
+    //delay(10);
+
+    //RED OFF
+    gfx_color(160,160,160);
+    gfx_fillcircle(260,270,20);
+    gfx_flush();
+
+   
+    //GREEN ON
+    gfx_color(0,255,0);
+    gfx_fillcircle(185,270,20);
+    gfx_flush();
+    Car_LefttoRight();
+   // delay(1);
+      //------------------------------// // CAR
+ 
+    //GREEN OFF
+    gfx_color(160,160,160);
+    gfx_fillcircle(185,270,20);  
+    gfx_flush(); 
+
+    //YELLOW ON
+    gfx_color(255,255,0);
+    gfx_fillcircle(225,270,20);
+    gfx_flush();
+    delay(10);
+  
+    //YELLOW OFF
+    gfx_color(160,160,160);
+    gfx_fillcircle(225,270,20);
+    gfx_flush();
+
+    //RED ON
+    gfx_color(255,0,0);
+    gfx_fillcircle(260,270,20);
+    gfx_flush();
+ // ------------------------------------------------------------------------ //
+   
+  
+    // South(left) = GREEN
+ 
+    //ALL RED ON
+    gfx_color(255,0,0);
+    gfx_fillcircle(630,255,20);    //North right
+    gfx_color(255,0,0);
+    gfx_fillcircle(260,270,20);    //North left
+    gfx_color(255,0,0);
+    gfx_fillcircle(635,630,20);    //South right
+    gfx_color(255,0,0);
+    gfx_fillcircle(270,635,20);    //South left
+    gfx_flush();
+   // stop_car_Down();
+    //delay(10);
+
+    //RED OFF
+    gfx_color(160,160,160);
+    gfx_fillcircle(270,635,20);
+    gfx_flush();
+
+   
+    //GREEN ON
+    gfx_color(0,255,0);
+    gfx_fillcircle(270,710,20);
+    gfx_flush();
+    car_DowntoUp();
+    //delay(50);
+ 
+    //GREEN OFF
+    gfx_color(160,160,160);
+    gfx_fillcircle(270,710,20);  
+    gfx_flush(); 
+
+    //YELLOW ON
+    gfx_color(255,255,0);
+    gfx_fillcircle(270,670,20);
+    gfx_flush();
+    delay(10);
+  
+    //YELLOW OFF
+    gfx_color(160,160,160);
+    gfx_fillcircle(270,670,20);
+    gfx_flush();
+
+    //RED ON
+    gfx_color(255,0,0);
+    gfx_fillcircle(270,635,20);
+    gfx_flush();
+    delay(10);
+   
+   
+     if (gfx_event_waiting()) {
+     action=gfx_wait(); 
+ 
+      if(action == (gfx_xpos()>=212&&gfx_xpos()<=240&&gfx_ypos()>=702&&gfx_ypos()<=729))
+         display_level2_LowerPedestrian();
+     }
+  
+ // -------------------------------------------------------------------------//
+     
+ 
+     // South(right) = GREEN  
+  
+    //ALL RED ON
+    gfx_color(255,0,0);
+    gfx_fillcircle(630,255,20);    //North right
+    gfx_color(255,0,0);
+    gfx_fillcircle(260,270,20);    //North left
+    gfx_color(255,0,0);
+    gfx_fillcircle(635,630,20);    //South right
+    gfx_color(255,0,0);
+    gfx_fillcircle(270,635,20);    //South left
+    gfx_flush();
+    //Stop_Car_Right();
+    //delay(10);
+
+    //RED OFF
+    gfx_color(160,160,160);
+    gfx_fillcircle(635,630,20);  
+    gfx_flush();  
+
+    //GREEN ON
+    gfx_color(0,255,0);
+    gfx_fillcircle(705,630,20);
+    gfx_flush();
+    car_RightToLeft();
+    // delay(50);
+  
+    //GREEN OFF
+    gfx_color(160,160,160);
+    gfx_fillcircle(705,630,20);
+    gfx_flush();
+
+    //YELLOW ON
+    gfx_color(255,255,0);
+    gfx_fillcircle(670,630,20);
+    gfx_flush();
+    delay(10);
+  
+    //YELLOW OFF
+    gfx_color(160,160,160);
+    gfx_fillcircle(670,630,20);
+    gfx_flush();
+
+    //RED ON
+    gfx_color(255,0,0);
+    gfx_fillcircle(635,630,20);
+    gfx_flush();
+
+//------------------------------------------------------------------------------//
+  
+   return;
+   }
+
+
+  void display_level2_UpperPedestrian() {
+ 
+   int i;
+
+    for(i=250; i >= 0; i = i - 50)
+{
+  gfx_color(165,42,42);
+  gfx_fillcircle(321+i,241,20);
+  gfx_color(165,42,42);
+  gfx_fillrectangle(311+i,250,15,25);
+  gfx_color(165,42,42);                  
+  gfx_fillrectangle(311+i,270,5,20); 
+   gfx_color(165,42,42);                  
+  gfx_fillrectangle(320+i,270,5,20);      // upper pedestrian
+  gfx_flush();
+  delay(5);
+ 
+  gfx_color(0,0,0);
+  gfx_fillcircle(321+i,241,20);
+  gfx_color(255,255,0);                  
+  gfx_fillrectangle(311+i,250,15,25);
+  gfx_color(255,255,0);                  
+  gfx_fillrectangle(311+i,270,5,20);
+  gfx_color(255,255,0);                  
+  gfx_fillrectangle(320+i,270,5,20);
+  gfx_flush();
+  //Pedestrian_Crossing_Upper_Line();
+  //Pedestrian_Crossing_Lower_Line();
+
+  if(i==0)
+   break;
+
+}
+}
+
+void display_level2_LowerPedestrian() {
+ 
+   int i;
+
+  for(i=0; i <= 250; i = i + 50)
+{
+  gfx_color(165,42,42);
+  gfx_fillcircle(321+i,611,20);
+  gfx_color(165,42,42);
+  gfx_fillrectangle(311+i,620,15,25);
+  gfx_color(165,42,42);                  
+  gfx_fillrectangle(311+i,637,5,20); 
+  gfx_color(165,42,42);                  
+  gfx_fillrectangle(320+i,637,5,20);      // lower pedestrian
+  gfx_flush();
+  delay(5);
+ 
+  gfx_color(0,0,0);
+  gfx_fillcircle(321+i,611,20);
+  gfx_color(255,255,0);                  
+  gfx_fillrectangle(311+i,620,15,25);
+  gfx_color(255,255,0);                  
+  gfx_fillrectangle(311+i,637,5,20);
+  gfx_color(255,255,0);                  
+  gfx_fillrectangle(320+i,637,5,20);
+  gfx_flush();
+  //Pedestrian_Crossing_Upper_Line();
+  //Pedestrian_Crossing_Lower_Line();
+
+  if(i==250)
+   break;
+
+}
+ 
+}
+
+/*  void check_pedestrian_UpperPart() {
+
+                gfx_color(0,255,0);
+                gfx_fillcircle(685,272,30);
+                display_level2_UpperPedestrian();
+                gfx_flush();                       // check pedestrian
+                delay(3);
+                gfx_color(255,0,0);
+                gfx_fillcircle(685,272,30);
+                gfx_flush();
+}  */
+
+void Car_LefttoRight(){
+ 
+  int i,j;
+
+ for(i=170,j=140;i <= 814, j <= 814; i = i + 10,j= j + 10)
+{
+  if(i>=170&&i<=814) {   // i<=814
+  gfx_color(250,17,17);
+  gfx_fillrectangle(3+i,320,80,30);    // body
+  gfx_color(167,219,200);
+  gfx_fillrectangle(13+i,325,10,20);  
+  gfx_color(167,219,200);
+  gfx_fillrectangle(58+i,325,10,20);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(42+i,325,12,5);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(25+i,325,12,5);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(42+i,340,12,5);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(25+i,340,12,5); }
+
+  /*// stop the car
+  if(i>=170) {   // i<=814
+  gfx_color(250,17,17);
+  gfx_fillrectangle(173,320,80,30);    // body
+  gfx_color(167,219,200);
+  gfx_fillrectangle(183,325,10,20);  
+  gfx_color(167,219,200);
+  gfx_fillrectangle(228,325,10,20);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(212,325,12,5);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(195,325,12,5);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(212,340,12,5);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(195,340,12,5); } */
+
+ if(i>=170&&i<=455) {    // i<=455
+  gfx_color(250,17,17);
+  gfx_fillrectangle(3+i,390,80,30);    // body
+  gfx_color(167,219,200);
+  gfx_fillrectangle(13+i,395,10,20);  
+  gfx_color(167,219,200);
+  gfx_fillrectangle(58+i,395,10,20);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(42+i,395,12,5);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(25+i,395,12,5);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(42+i,410,12,5);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(25+i,410,12,5); }
+
+/*  // car stops
+  if(i>=170) {   
+  gfx_color(250,17,17);
+  gfx_fillrectangle(173,390,80,30);    // body
+  gfx_color(167,219,200);
+  gfx_fillrectangle(183,395,10,20);  
+  gfx_color(167,219,200);
+  gfx_fillrectangle(228,395,10,20);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(212,395,12,5);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(195,395,12,5);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(212,410,12,5);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(195,410,12,5); } */
+ 
+ 
+
+ /* if(i<=455) {
+  gfx_color(250,17,17);
+  gfx_fillrectangle(3+i,390,80,30);    // body
+  gfx_color(167,219,200);
+  gfx_fillrectangle(13+i,395,10,20);  
+  gfx_color(167,219,200);
+  gfx_fillrectangle(58+i,395,10,20);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(42+i,395,12,5);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(25+i,395,12,5);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(42+i,410,12,5);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(25+i,410,12,5); } */
+
+ if(i>=455) {
+  gfx_color(250,17,17);
+  gfx_fillrectangle(478,70+j,30,80);    // body
+  gfx_color(167,219,200);
+  gfx_fillrectangle(483,80+j,20,10);  
+  gfx_color(167,219,200);
+  gfx_fillrectangle(483,125+j,20,10);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(483,109+j,5,12); 
+  gfx_color(167,219,200);
+  gfx_fillrectangle(483,92+j,5,12);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(499,109+j,5,12);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(499,92+j,5,12); }
+
+  gfx_flush();
+  delay(1);
+
+ if(i>=170&&i<=814) { // i<=814
+  gfx_color(0,0,0);
+  gfx_fillrectangle(3+i,320,80,30);    // body
+  gfx_color(0,0,0);
+  gfx_fillrectangle(13+i,325,10,20);  
+  gfx_color(0,0,0);
+  gfx_fillrectangle(58+i,325,10,20);
+  gfx_color(0,0,0);
+  gfx_fillrectangle(42+i,325,12,5);
+  gfx_color(0,0,0);
+  gfx_fillrectangle(25+i,325,12,5);
+  gfx_color(0,0,0);
+  gfx_fillrectangle(42+i,340,12,5);
+  gfx_color(0,0,0);
+  gfx_fillrectangle(25+i,340,12,5); }
+
+ if(i>=170&&i<=455) {
+  gfx_color(0,0,0);
+  gfx_fillrectangle(3+i,390,80,30);    // body
+  gfx_color(0,0,0);
+  gfx_fillrectangle(13+i,395,10,20);  
+  gfx_color(0,0,0);
+  gfx_fillrectangle(58+i,395,10,20);
+  gfx_color(0,0,0);
+  gfx_fillrectangle(42+i,395,12,5);
+  gfx_color(0,0,0);
+  gfx_fillrectangle(25+i,395,12,5);
+  gfx_color(0,0,0);
+  gfx_fillrectangle(42+i,410,12,5);
+  gfx_color(0,0,0);
+  gfx_fillrectangle(25+i,410,12,5); }
+
+ if(i>=455) {
+  gfx_color(0,0,0);
+  gfx_fillrectangle(478,70+j,30,80);    // body
+  gfx_color(0,0,0);
+  gfx_fillrectangle(483,80+j,20,10);  
+  gfx_color(0,0,0);
+  gfx_fillrectangle(483,125+j,20,10);
+  gfx_color(0,0,0);
+  gfx_fillrectangle(483,109+j,5,12); 
+  gfx_color(0,0,0);
+  gfx_fillrectangle(483,92+j,5,12);
+  gfx_color(0,0,0);
+  gfx_fillrectangle(499,109+j,5,12);
+  gfx_color(0,0,0);
+  gfx_fillrectangle(499,92+j,5,12); }
+}
+}
+
+void car_UPtoDown() {
+ 
+  int i,j;
+ 
+  for(i=140,j=140;i <= 480, j <= 840; i = i + 10,j = j + 10) {
+
+
+  if(i>=0&&j>=140) {
+  gfx_color(250,17,17);
+  gfx_fillrectangle(540,1+j,30,80);    // body
+  gfx_color(167,219,200);
+  gfx_fillrectangle(545,11+j,20,10);  
+  gfx_color(167,219,200);
+  gfx_fillrectangle(545,56+j,20,10);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(545,40+j,5,12); 
+  gfx_color(167,219,200);
+  gfx_fillrectangle(545,23+j,5,12);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(560,40+j,5,12);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(560,23+j,5,12); }
+
+  /*// stop the car
+  if(j>=140){
+   gfx_color(250,17,17);
+  gfx_fillrectangle(540,141,30,80);    // body
+  gfx_color(167,219,200);
+  gfx_fillrectangle(545,151,20,10);  
+  gfx_color(167,219,200);
+  gfx_fillrectangle(545,196,20,10);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(545,180,5,12); 
+  gfx_color(167,219,200);
+  gfx_fillrectangle(545,163,5,12);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(560,180,5,12);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(560,163,5,12); }  */
+ 
+ 
+
+
+ if(j>=140&&j<=390) {      // j<=390
+  gfx_color(250,17,17);
+  gfx_fillrectangle(478,1+j,30,80);    // body
+  gfx_color(167,219,200);
+  gfx_fillrectangle(483,11+j,20,10);  
+  gfx_color(167,219,200);
+  gfx_fillrectangle(483,56+j,20,10);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(483,40+j,5,12); 
+  gfx_color(167,219,200);
+  gfx_fillrectangle(483,23+j,5,12);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(499,40+j,5,12);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(499,23+j,5,12); }
+
+ /*// stop the car
+ if(j>=140) {     
+  gfx_color(250,17,17);
+  gfx_fillrectangle(478,141,30,80);    // body
+  gfx_color(167,219,200);
+  gfx_fillrectangle(483,151,20,10);  
+  gfx_color(167,219,200);
+  gfx_fillrectangle(483,196,20,10);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(483,180,5,12); 
+  gfx_color(167,219,200);
+  gfx_fillrectangle(483,163,5,12);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(499,180,5,12);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(499,163,5,12); } */
+
+ 
+  if(j>=390){            //j>=390
+  gfx_color(250,17,17);
+  gfx_fillrectangle(810-i,480,80,30);    // body
+  gfx_color(167,219,200);
+  gfx_fillrectangle(820-i,485,10,20);  
+  gfx_color(167,219,200);
+  gfx_fillrectangle(865-i,485,10,20);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(849-i,485,12,5);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(832-i,485,12,5);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(849-i,500,12,5);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(832-i,500,12,5); } 
+//----------------------------------------------------------------------------//
+ // stop the car
+  if(i>=140) {   // i<=814
+  gfx_color(250,17,17);
+  gfx_fillrectangle(173,320,80,30);    // body
+  gfx_color(167,219,200);
+  gfx_fillrectangle(183,325,10,20);  
+  gfx_color(167,219,200);
+  gfx_fillrectangle(228,325,10,20);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(212,325,12,5);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(195,325,12,5);
+  gfx_color(167,219,200);                           // left side
+  gfx_fillrectangle(212,340,12,5);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(195,340,12,5); }
+
+  // car stops
+  if(i>=140) {   
+  gfx_color(250,17,17);
+  gfx_fillrectangle(173,390,80,30);    // body
+  gfx_color(167,219,200);
+  gfx_fillrectangle(183,395,10,20);  
+  gfx_color(167,219,200);
+  gfx_fillrectangle(228,395,10,20);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(212,395,12,5);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(195,395,12,5);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(212,410,12,5);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(195,410,12,5); }
+//-----------------------------------------------------------------------------//
+
+//-----------------------------------------------------------------------------//
+  //DOWN SIDE
+
+  // car stops
+  if(j==140) {
+  gfx_color(250,17,17);
+  gfx_fillrectangle(400,680,30,80);    // body
+  gfx_color(167,219,200);
+  gfx_fillrectangle(405,690,20,10);  
+  gfx_color(167,219,200);
+  gfx_fillrectangle(405,735,20,10);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(405,719,5,12); 
+  gfx_color(167,219,200);
+  gfx_fillrectangle(405,702,5,12);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(420,719,5,12);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(420,702,5,12); }
+
+ // car stops
+  if(j==140) {
+  gfx_color(250,17,17);
+  gfx_fillrectangle(312,680,30,80);    // body
+  gfx_color(167,219,200);
+  gfx_fillrectangle(317,690,20,10);  
+  gfx_color(167,219,200);
+  gfx_fillrectangle(317,735,20,10);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(317,719,5,12); 
+  gfx_color(167,219,200);
+  gfx_fillrectangle(317,702,5,12);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(332,719,5,12);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(332,702,5,12); }
+
+
+//------------------------------------------------------------------------------//
+
+//------------------------------------------------------------------------------//
+  //RIGHT SIDE
+
+  // Car Stops
+  if(i>=140){
+  gfx_color(250,17,17);
+  gfx_fillrectangle(610,480,80,30);    // body
+  gfx_color(167,219,200);
+  gfx_fillrectangle(620,485,10,20);  
+  gfx_color(167,219,200);
+  gfx_fillrectangle(665,485,10,20);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(649,485,12,5);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(632,485,12,5);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(649,500,12,5);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(632,500,12,5); }
+
+  //car stops
+  if(i>=140){  // i<=840
+  gfx_color(250,17,17);
+  gfx_fillrectangle(610,550,80,30);    // body
+  gfx_color(167,219,200);
+  gfx_fillrectangle(620,555,10,20);  
+  gfx_color(167,219,200);
+  gfx_fillrectangle(665,555,10,20);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(649,555,12,5);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(632,555,12,5);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(649,570,12,5);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(632,570,12,5); }
+
+
+//------------------------------------------------------------------------------//
+
+
+ gfx_flush();
+  delay(1);
+
+  if(i>=0&&j>=140) {
+    gfx_color(0,0,0);
+    gfx_fillrectangle(540,1+j,30,80);    // body
+    gfx_color(0,0,0);
+    gfx_fillrectangle(545,11+j,20,10);  
+    gfx_color(0,0,0);
+    gfx_fillrectangle(545,56+j,20,10);
+    gfx_color(0,0,0);
+    gfx_fillrectangle(545,40+j,5,12); 
+    gfx_color(0,0,0);
+    gfx_fillrectangle(545,23+j,5,12);
+    gfx_color(0,0,0);
+    gfx_fillrectangle(560,40+j,5,12);
+    gfx_color(0,0,0);
+    gfx_fillrectangle(560,23+j,5,12);
+}
+
+
+   if(j>=140&&j<=390) {
+  gfx_color(0,0,0);
+  gfx_fillrectangle(478,1+j,30,80);    // body
+  gfx_color(0,0,0);
+  gfx_fillrectangle(483,11+j,20,10);  
+  gfx_color(0,0,0);
+  gfx_fillrectangle(483,56+j,20,10);
+  gfx_color(0,0,0);
+  gfx_fillrectangle(483,40+j,5,12); 
+  gfx_color(0,0,0);
+  gfx_fillrectangle(483,23+j,5,12);
+  gfx_color(0,0,0);
+  gfx_fillrectangle(499,40+j,5,12);
+  gfx_color(0,0,0);
+  gfx_fillrectangle(499,23+j,5,12); }
+
+  
+if(j>=390){
+  gfx_color(0,0,0);
+  gfx_fillrectangle(810-i,480,80,30);    // body
+  gfx_color(0,0,0);
+  gfx_fillrectangle(820-i,485,10,20);  
+  gfx_color(0,0,0);
+  gfx_fillrectangle(865-i,485,10,20);
+  gfx_color(0,0,0);
+  gfx_fillrectangle(849-i,485,12,5);
+  gfx_color(0,0,0);
+  gfx_fillrectangle(832-i,485,12,5);
+  gfx_color(0,0,0);
+  gfx_fillrectangle(849-i,500,12,5);
+  gfx_color(0,0,0);
+  gfx_fillrectangle(832-i,500,12,5); }
+
+  Pedestrian_Crossing_Upper_Line();
+  Pedestrian_Crossing_Lower_Line();
+}
+ 
+}
+
+void car_RightToLeft() {
+
+   int i,j;
+ 
+  for(i=140,j=140;i <= 840, j <= 840; i = i + 10,j = j + 10) {
+
+
+  if(i>=140&&i<=400){  //i<=400
+  gfx_color(250,17,17);
+  gfx_fillrectangle(750-i,480,80,30);    // body
+  gfx_color(167,219,200);
+  gfx_fillrectangle(760-i,485,10,20);  
+  gfx_color(167,219,200);
+  gfx_fillrectangle(805-i,485,10,20);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(789-i,485,12,5);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(772-i,485,12,5);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(789-i,500,12,5);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(772-i,500,12,5); }
+
+ /* // Car Stops
+  if(i>=170){
+  gfx_color(250,17,17);
+  gfx_fillrectangle(640,480,80,30);    // body
+  gfx_color(167,219,200);
+  gfx_fillrectangle(650,485,10,20);  
+  gfx_color(167,219,200);
+  gfx_fillrectangle(695,485,10,20);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(679,485,12,5);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(662,485,12,5);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(679,500,12,5);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(662,500,12,5); } */
+
+  if(i>=140&&i<=840){  // i<=840
+  gfx_color(250,17,17);
+  gfx_fillrectangle(750-i,550,80,30);    // body
+  gfx_color(167,219,200);
+  gfx_fillrectangle(760-i,555,10,20);  
+  gfx_color(167,219,200);
+  gfx_fillrectangle(805-i,555,10,20);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(789-i,555,12,5);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(772-i,555,12,5);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(789-i,570,12,5);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(772-i,570,12,5); }
+
+ /* //car stops
+  if(i>=170){  // i<=840
+  gfx_color(250,17,17);
+  gfx_fillrectangle(640,550,80,30);    // body
+  gfx_color(167,219,200);
+  gfx_fillrectangle(650,555,10,20);  
+  gfx_color(167,219,200);
+  gfx_fillrectangle(695,555,10,20);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(679,555,12,5);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(662,555,12,5);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(679,570,12,5);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(662,570,12,5); } */
+
+  if(i>=400) {
+  gfx_color(250,17,17);
+  gfx_fillrectangle(410,720-j,30,80);    // body
+  gfx_color(167,219,200);
+  gfx_fillrectangle(415,730-j,20,10);  
+  gfx_color(167,219,200);
+  gfx_fillrectangle(415,775-j,20,10);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(415,759-j,5,12); 
+  gfx_color(167,219,200);
+  gfx_fillrectangle(415,742-j,5,12);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(430,759-j,5,12);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(430,742-j,5,12); }
+
+ 
+   gfx_flush();
+   delay(1);
+
+ if(i>=140&&i<=400){
+  gfx_color(0,0,0);
+  gfx_fillrectangle(750-i,480,80,30);    // body
+  gfx_color(0,0,0);
+  gfx_fillrectangle(760-i,485,10,20);  
+  gfx_color(0,0,0);
+  gfx_fillrectangle(805-i,485,10,20);
+  gfx_color(0,0,0);
+  gfx_fillrectangle(789-i,485,12,5);
+  gfx_color(0,0,0);
+  gfx_fillrectangle(772-i,485,12,5);
+  gfx_color(0,0,0);
+  gfx_fillrectangle(789-i,500,12,5);
+  gfx_color(0,0,0);
+  gfx_fillrectangle(772-i,500,12,5); }
+ 
+ if(i>=140&&i<=840){
+  gfx_color(0,0,0);
+  gfx_fillrectangle(750-i,550,80,30);    // body
+  gfx_color(0,0,0);
+  gfx_fillrectangle(760-i,555,10,20);  
+  gfx_color(0,0,0);
+  gfx_fillrectangle(805-i,555,10,20);
+  gfx_color(0,0,0);
+  gfx_fillrectangle(789-i,555,12,5);
+  gfx_color(0,0,0);
+  gfx_fillrectangle(772-i,555,12,5);
+  gfx_color(0,0,0);
+  gfx_fillrectangle(789-i,570,12,5);
+  gfx_color(0,0,0);
+  gfx_fillrectangle(772-i,570,12,5); }
+
+  Pedestrian_Crossing_Upper_Line();
+
+ if(i>=400) {
+  gfx_color(0,0,0);
+  gfx_fillrectangle(410,720-j,30,80);    // body
+  gfx_color(0,0,0);
+  gfx_fillrectangle(415,730-j,20,10);  
+  gfx_color(0,0,0);
+  gfx_fillrectangle(415,775-j,20,10);
+  gfx_color(0,0,0);
+  gfx_fillrectangle(415,759-j,5,12); 
+  gfx_color(0,0,0);
+  gfx_fillrectangle(415,742-j,5,12);
+  gfx_color(0,0,0);
+  gfx_fillrectangle(430,759-j,5,12);
+  gfx_color(0,0,0);
+  gfx_fillrectangle(430,742-j,5,12); }
+
+  Pedestrian_Crossing_Upper_Line();
+  Pedestrian_Crossing_Lower_Line();
+ 
+ 
+ }
+}
+
+void car_DowntoUp(){
+
+   int i,j;
+ 
+  for(i=140,j=140;i <= 400, j <= 840; i = i + 10,j = j + 10) {
+
+ if(j>=140&&j<=400) {  // j<=400
+  gfx_color(250,17,17);
+  gfx_fillrectangle(400,820-j,30,80);    // body
+  gfx_color(167,219,200);
+  gfx_fillrectangle(405,830-j,20,10);  
+  gfx_color(167,219,200);
+  gfx_fillrectangle(405,875-j,20,10);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(405,859-j,5,12); 
+  gfx_color(167,219,200);
+  gfx_fillrectangle(405,842-j,5,12);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(420,859-j,5,12);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(420,842-j,5,12); }
+
+ /* // car stops
+  if(j==140) {
+  gfx_color(250,17,17);
+  gfx_fillrectangle(400,680,30,80);    // body
+  gfx_color(167,219,200);
+  gfx_fillrectangle(405,690,20,10);  
+  gfx_color(167,219,200);
+  gfx_fillrectangle(405,735,20,10);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(405,719,5,12); 
+  gfx_color(167,219,200);
+  gfx_fillrectangle(405,702,5,12);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(420,719,5,12);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(420,702,5,12); } */
+
+ if(j>=400) {  //j>=400 (turn)
+  gfx_color(250,17,17);
+  gfx_fillrectangle(120+i,393,80,30);    // body
+  gfx_color(167,219,200);
+  gfx_fillrectangle(130+i,398,10,20);  
+  gfx_color(167,219,200);
+  gfx_fillrectangle(175+i,398,10,20);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(159+i,398,12,5);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(142+i,398,12,5);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(159+i,413,12,5);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(142+i,413,12,5); }
+
+ if(j>=140&&j<=840) {
+  gfx_color(250,17,17);
+  gfx_fillrectangle(312,820-j,30,80);    // body
+  gfx_color(167,219,200);
+  gfx_fillrectangle(317,830-j,20,10);  
+  gfx_color(167,219,200);
+  gfx_fillrectangle(317,875-j,20,10);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(317,859-j,5,12); 
+  gfx_color(167,219,200);
+  gfx_fillrectangle(317,842-j,5,12);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(332,859-j,5,12);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(332,842-j,5,12); }
+
+/* // car stops
+ if(j==140) {
+  gfx_color(250,17,17);
+  gfx_fillrectangle(312,680,30,80);    // body
+  gfx_color(167,219,200);
+  gfx_fillrectangle(317,690,20,10);  
+  gfx_color(167,219,200);
+  gfx_fillrectangle(317,735,20,10);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(317,719,5,12); 
+  gfx_color(167,219,200);
+  gfx_fillrectangle(317,702,5,12);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(332,719,5,12);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(332,702,5,12); }  */
+ 
+
+  gfx_flush();
+  delay(1);
+ 
+  if(j>=140&&j<=400) {
+  gfx_color(0,0,0);
+  gfx_fillrectangle(400,820-j,30,80);    // body
+  gfx_color(0,0,0);
+  gfx_fillrectangle(405,830-j,20,10);  
+  gfx_color(0,0,0);
+  gfx_fillrectangle(405,875-j,20,10);
+  gfx_color(0,0,0);
+  gfx_fillrectangle(405,859-j,5,12); 
+  gfx_color(0,0,0);
+  gfx_fillrectangle(405,842-j,5,12);
+  gfx_color(0,0,0);
+  gfx_fillrectangle(420,859-j,5,12);
+  gfx_color(0,0,0);
+  gfx_fillrectangle(420,842-j,5,12); }
+
+  if(j>=400) {  //j>=400 (turn)
+  gfx_color(0,0,0);
+  gfx_fillrectangle(120+i,393,80,30);    // body
+  gfx_color(0,0,0);
+  gfx_fillrectangle(130+i,398,10,20);  
+  gfx_color(0,0,0);
+  gfx_fillrectangle(175+i,398,10,20);
+  gfx_color(0,0,0);
+  gfx_fillrectangle(159+i,398,12,5);
+  gfx_color(0,0,0);
+  gfx_fillrectangle(142+i,398,12,5);
+  gfx_color(0,0,0);
+  gfx_fillrectangle(159+i,413,12,5);
+  gfx_color(0,0,0);
+  gfx_fillrectangle(142+i,413,12,5); }
+
+  if(i>=140) {
+  gfx_color(0,0,0);
+  gfx_fillrectangle(312,820-j,30,80);    // body
+  gfx_color(0,0,0);
+  gfx_fillrectangle(317,830-j,20,10);  
+  gfx_color(0,0,0);
+  gfx_fillrectangle(317,875-j,20,10);
+  gfx_color(0,0,0);
+  gfx_fillrectangle(317,859-j,5,12); 
+  gfx_color(0,0,0);
+  gfx_fillrectangle(317,842-j,5,12);
+  gfx_color(0,0,0);
+  gfx_fillrectangle(332,859-j,5,12);
+  gfx_color(0,0,0);
+  gfx_fillrectangle(332,842-j,5,12); }
+
+  Pedestrian_Crossing_Upper_Line();
+  Pedestrian_Crossing_Lower_Line();
+ 
+ 
+ 
+}
+
+}
+
+void stop_car_UP(){
+ int i,j;
+ 
+  for(i=0,j=0;i <= 140, j <= 140; i = i + 10,j = j + 10) {
+
+
+  if(i>=0&&j<=140) {
+  gfx_color(250,17,17);
+  gfx_fillrectangle(540,1+j,30,80);    // body
+  gfx_color(167,219,200);
+  gfx_fillrectangle(545,11+j,20,10);  
+  gfx_color(167,219,200);
+  gfx_fillrectangle(545,56+j,20,10);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(545,40+j,5,12); 
+  gfx_color(167,219,200);
+  gfx_fillrectangle(545,23+j,5,12);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(560,40+j,5,12);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(560,23+j,5,12); }
+
+ 
+
+  // stop the car
+  if(j>=140){
+   gfx_color(250,17,17);
+  gfx_fillrectangle(540,141,30,80);    // body
+  gfx_color(167,219,200);
+  gfx_fillrectangle(545,151,20,10);  
+  gfx_color(167,219,200);
+  gfx_fillrectangle(545,196,20,10);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(545,180,5,12); 
+  gfx_color(167,219,200);
+  gfx_fillrectangle(545,163,5,12);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(560,180,5,12);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(560,163,5,12); }
+ 
+ 
+
+
+ if(j<=140) {      // j<=390
+  gfx_color(250,17,17);
+  gfx_fillrectangle(478,1+j,30,80);    // body
+  gfx_color(167,219,200);
+  gfx_fillrectangle(483,11+j,20,10);  
+  gfx_color(167,219,200);
+  gfx_fillrectangle(483,56+j,20,10);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(483,40+j,5,12); 
+  gfx_color(167,219,200);
+  gfx_fillrectangle(483,23+j,5,12);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(499,40+j,5,12);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(499,23+j,5,12); }
+
+ // stop the car
+ if(j>=140) {     
+  gfx_color(250,17,17);
+  gfx_fillrectangle(478,141,30,80);    // body
+  gfx_color(167,219,200);
+  gfx_fillrectangle(483,151,20,10);  
+  gfx_color(167,219,200);
+  gfx_fillrectangle(483,196,20,10);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(483,180,5,12); 
+  gfx_color(167,219,200);
+  gfx_fillrectangle(483,163,5,12);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(499,180,5,12);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(499,163,5,12); }
+
+// --------------------------------------------------------------------------------//
+
+// STOP CAR ON LEFT SIDE
+
+  if(i<=140) {   // i<=814
+  gfx_color(250,17,17);
+  gfx_fillrectangle(3+i,320,80,30);    // body
+  gfx_color(167,219,200);
+  gfx_fillrectangle(13+i,325,10,20);  
+  gfx_color(167,219,200);
+  gfx_fillrectangle(58+i,325,10,20);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(42+i,325,12,5);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(25+i,325,12,5);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(42+i,340,12,5);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(25+i,340,12,5); }
+
+
+  // stop the car
+  if(i>=140) {   // i<=814
+  gfx_color(250,17,17);
+  gfx_fillrectangle(143,320,80,30);    // body
+  gfx_color(167,219,200);
+  gfx_fillrectangle(153,325,10,20);  
+  gfx_color(167,219,200);
+  gfx_fillrectangle(198,325,10,20);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(182,325,12,5);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(165,325,12,5);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(182,340,12,5);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(165,340,12,5); }
+
+ if(i<=140) {    // i<=455
+  gfx_color(250,17,17);
+  gfx_fillrectangle(3+i,390,80,30);    // body
+  gfx_color(167,219,200);
+  gfx_fillrectangle(13+i,395,10,20);  
+  gfx_color(167,219,200);
+  gfx_fillrectangle(58+i,395,10,20);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(42+i,395,12,5);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(25+i,395,12,5);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(42+i,410,12,5);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(25+i,410,12,5); }
+
+  // car stops
+  if(i>=140) {   
+  gfx_color(250,17,17);
+  gfx_fillrectangle(143,390,80,30);    // body
+  gfx_color(167,219,200);
+  gfx_fillrectangle(153,395,10,20);  
+  gfx_color(167,219,200);
+  gfx_fillrectangle(198,395,10,20);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(182,395,12,5);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(165,395,12,5);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(182,410,12,5);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(165,410,12,5); }
+
+//---------------------------------------------------------------------------------//
+
+//---------------------------------------------------------------------------------//
+
+ // STOP CAR SOUTH SIDE
+
+ if(j<=140) {  // j<=400
+  gfx_color(250,17,17);
+  gfx_fillrectangle(400,820-j,30,80);    // body
+  gfx_color(167,219,200);
+  gfx_fillrectangle(405,830-j,20,10);  
+  gfx_color(167,219,200);
+  gfx_fillrectangle(405,875-j,20,10);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(405,859-j,5,12); 
+  gfx_color(167,219,200);
+  gfx_fillrectangle(405,842-j,5,12);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(420,859-j,5,12);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(420,842-j,5,12); }
+
+  // car stops
+  if(j>=140) {
+  gfx_color(250,17,17);
+  gfx_fillrectangle(400,680,30,80);    // body
+  gfx_color(167,219,200);
+  gfx_fillrectangle(405,690,20,10);  
+  gfx_color(167,219,200);
+  gfx_fillrectangle(405,735,20,10);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(405,719,5,12); 
+  gfx_color(167,219,200);
+  gfx_fillrectangle(405,702,5,12);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(420,719,5,12);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(420,702,5,12); }
+
+  if(j<=140) {
+  gfx_color(250,17,17);
+  gfx_fillrectangle(312,820-j,30,80);    // body
+  gfx_color(167,219,200);
+  gfx_fillrectangle(317,830-j,20,10);  
+  gfx_color(167,219,200);
+  gfx_fillrectangle(317,875-j,20,10);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(317,859-j,5,12); 
+  gfx_color(167,219,200);
+  gfx_fillrectangle(317,842-j,5,12);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(332,859-j,5,12);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(332,842-j,5,12); }
+
+ // car stops
+  if(j>=140) {
+  gfx_color(250,17,17);
+  gfx_fillrectangle(312,680,30,80);    // body
+  gfx_color(167,219,200);
+  gfx_fillrectangle(317,690,20,10);  
+  gfx_color(167,219,200);
+  gfx_fillrectangle(317,735,20,10);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(317,719,5,12); 
+  gfx_color(167,219,200);
+  gfx_fillrectangle(317,702,5,12);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(332,719,5,12);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(332,702,5,12); }
+//-----------------------------------------------------------------------------------//
+
+//-----------------------------------------------------------------------------------//
+  //STOP CAR ON RIGHT SIDE
+
+  if(i<=140){  //i<=400
+  gfx_color(250,17,17);
+  gfx_fillrectangle(810-i,480,80,30);    // body
+  gfx_color(167,219,200);
+  gfx_fillrectangle(820-i,485,10,20);  
+  gfx_color(167,219,200);
+  gfx_fillrectangle(865-i,485,10,20);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(849-i,485,12,5);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(832-i,485,12,5);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(849-i,500,12,5);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(832-i,500,12,5); }
+
+  // Car Stops
+  if(i>=140){
+  gfx_color(250,17,17);
+  gfx_fillrectangle(670,480,80,30);    // body
+  gfx_color(167,219,200);
+  gfx_fillrectangle(680,485,10,20);  
+  gfx_color(167,219,200);
+  gfx_fillrectangle(725,485,10,20);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(709,485,12,5);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(692,485,12,5);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(709,500,12,5);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(692,500,12,5); }
+
+  if(i<=140){  // i<=840
+  gfx_color(250,17,17);
+  gfx_fillrectangle(810-i,550,80,30);    // body
+  gfx_color(167,219,200);
+  gfx_fillrectangle(820-i,555,10,20);  
+  gfx_color(167,219,200);
+  gfx_fillrectangle(865-i,555,10,20);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(849-i,555,12,5);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(832-i,555,12,5);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(849-i,570,12,5);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(832-i,570,12,5); }
+
+  //car stops
+  if(i>=140){  // i<=840
+  gfx_color(250,17,17);
+  gfx_fillrectangle(670,550,80,30);    // body
+  gfx_color(167,219,200);
+  gfx_fillrectangle(680,555,10,20);  
+  gfx_color(167,219,200);
+  gfx_fillrectangle(725,555,10,20);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(709,555,12,5);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(692,555,12,5);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(709,570,12,5);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(692,570,12,5); }
+
+// ----------------------------------------------------------------------------------//
+
+
+  gfx_flush();
+  delay(1);
+//----------------------------------------------------------------------------------//
+  //STOP CAR ON LEFT SIDE  
+
+  if(i>=0&&i<=140) {
+    gfx_color(0,0,0);
+    gfx_fillrectangle(540,1+j,30,80);    // body
+    gfx_color(0,0,0);
+    gfx_fillrectangle(545,11+j,20,10);  
+    gfx_color(0,0,0);
+    gfx_fillrectangle(545,56+j,20,10);
+    gfx_color(0,0,0);
+    gfx_fillrectangle(545,40+j,5,12); 
+    gfx_color(0,0,0);
+    gfx_fillrectangle(545,23+j,5,12);
+    gfx_color(0,0,0);
+    gfx_fillrectangle(560,40+j,5,12);
+    gfx_color(0,0,0);
+    gfx_fillrectangle(560,23+j,5,12);
+
+ 
+}
+
+
+   if(i<=140) {
+  gfx_color(0,0,0);
+  gfx_fillrectangle(478,1+j,30,80);    // body
+  gfx_color(0,0,0);
+  gfx_fillrectangle(483,11+j,20,10);  
+  gfx_color(0,0,0);
+  gfx_fillrectangle(483,56+j,20,10);
+  gfx_color(0,0,0);
+  gfx_fillrectangle(483,40+j,5,12); 
+  gfx_color(0,0,0);
+  gfx_fillrectangle(483,23+j,5,12);
+  gfx_color(0,0,0);
+  gfx_fillrectangle(499,40+j,5,12);
+  gfx_color(0,0,0);
+  gfx_fillrectangle(499,23+j,5,12); }
+
+// -----------------------------------------------------------------------------//
+
+//-----------------------------------------------------------------------------//
+  //STOP CAR ON DOWN SIDE
+ 
+   if(j<=140) {  // j<=400
+  gfx_color(0,0,0);
+  gfx_fillrectangle(400,820-j,30,80);    // body
+  gfx_color(0,0,0);
+  gfx_fillrectangle(405,830-j,20,10);  
+  gfx_color(0,0,0);
+  gfx_fillrectangle(405,875-j,20,10);
+  gfx_color(0,0,0);
+  gfx_fillrectangle(405,859-j,5,12); 
+  gfx_color(0,0,0);
+  gfx_fillrectangle(405,842-j,5,12);
+  gfx_color(0,0,0);
+  gfx_fillrectangle(420,859-j,5,12);
+  gfx_color(0,0,0);
+  gfx_fillrectangle(420,842-j,5,12); }
+
+  if(j<=140) {
+  gfx_color(0,0,0);
+  gfx_fillrectangle(312,820-j,30,80);    // body
+  gfx_color(0,0,0);
+  gfx_fillrectangle(317,830-j,20,10);  
+  gfx_color(0,0,0);
+  gfx_fillrectangle(317,875-j,20,10);
+  gfx_color(0,0,0);
+  gfx_fillrectangle(317,859-j,5,12); 
+  gfx_color(0,0,0);
+  gfx_fillrectangle(317,842-j,5,12);
+  gfx_color(0,0,0);
+  gfx_fillrectangle(332,859-j,5,12);
+  gfx_color(0,0,0);
+  gfx_fillrectangle(332,842-j,5,12); }
+ 
+
+//------------------------------------------------------------------------------//
+
+//------------------------------------------------------------------------------//
+  //STOP CAR ON RIGHT SIDE
+  
+   if(i<=140){  //i<=400
+  gfx_color(0,0,0);
+  gfx_fillrectangle(810-i,480,80,30);    // body
+  gfx_color(0,0,0);
+  gfx_fillrectangle(820-i,485,10,20);  
+  gfx_color(0,0,0);
+  gfx_fillrectangle(865-i,485,10,20);
+  gfx_color(0,0,0);
+  gfx_fillrectangle(849-i,485,12,5);
+  gfx_color(0,0,0);
+  gfx_fillrectangle(832-i,485,12,5);
+  gfx_color(0,0,0);
+  gfx_fillrectangle(849-i,500,12,5);
+  gfx_color(0,0,0);
+  gfx_fillrectangle(832-i,500,12,5); }
+
+  if(i<=140){  // i<=840
+  gfx_color(0,0,0);
+  gfx_fillrectangle(810-i,550,80,30);    // body
+  gfx_color(0,0,0);
+  gfx_fillrectangle(820-i,555,10,20);  
+  gfx_color(0,0,0);
+  gfx_fillrectangle(865-i,555,10,20);
+  gfx_color(0,0,0);
+  gfx_fillrectangle(849-i,555,12,5);
+  gfx_color(0,0,0);
+  gfx_fillrectangle(832-i,555,12,5);
+  gfx_color(0,0,0);
+  gfx_fillrectangle(849-i,570,12,5);
+  gfx_color(0,0,0);
+  gfx_fillrectangle(832-i,570,12,5); }
+
+
+
+//------------------------------------------------------------------------------//
+  if(i<=140) {   // i<=814
+  gfx_color(0,0,0);
+  gfx_fillrectangle(3+i,320,80,30);    // body
+  gfx_color(0,0,0);
+  gfx_fillrectangle(13+i,325,10,20);  
+  gfx_color(0,0,0);
+  gfx_fillrectangle(58+i,325,10,20);
+  gfx_color(0,0,0);
+  gfx_fillrectangle(42+i,325,12,5);
+  gfx_color(0,0,0);
+  gfx_fillrectangle(25+i,325,12,5);
+  gfx_color(0,0,0);
+  gfx_fillrectangle(42+i,340,12,5);
+  gfx_color(0,0,0);
+  gfx_fillrectangle(25+i,340,12,5); }
+
+ if(i<=140) {    // i<=455
+  gfx_color(0,0,0);
+  gfx_fillrectangle(3+i,390,80,30);    // body
+  gfx_color(0,0,0);
+  gfx_fillrectangle(13+i,395,10,20);  
+  gfx_color(0,0,0);
+  gfx_fillrectangle(58+i,395,10,20);
+  gfx_color(0,0,0);
+  gfx_fillrectangle(42+i,395,12,5);
+  gfx_color(0,0,0);
+  gfx_fillrectangle(25+i,395,12,5);
+  gfx_color(0,0,0);
+  gfx_fillrectangle(42+i,410,12,5);
+  gfx_color(0,0,0);
+  gfx_fillrectangle(25+i,410,12,5); }
+ 
+}
+ 
+}
+
+void stop_car_Left(){
+
+   int i,j;
+
+   for(i=0,j=0;i <= 170, j <= 170; i = i + 5,j= j + 5)
+{
+  if(i<=170) {   // i<=814
+  gfx_color(250,17,17);
+  gfx_fillrectangle(3+i,320,80,30);    // body
+  gfx_color(167,219,200);
+  gfx_fillrectangle(13+i,325,10,20);  
+  gfx_color(167,219,200);
+  gfx_fillrectangle(58+i,325,10,20);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(42+i,325,12,5);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(25+i,325,12,5);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(42+i,340,12,5);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(25+i,340,12,5); }
+
+
+  // stop the car
+  if(i>=170) {   // i<=814
+  gfx_color(250,17,17);
+  gfx_fillrectangle(173,320,80,30);    // body
+  gfx_color(167,219,200);
+  gfx_fillrectangle(183,325,10,20);  
+  gfx_color(167,219,200);
+  gfx_fillrectangle(228,325,10,20);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(212,325,12,5);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(195,325,12,5);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(212,340,12,5);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(195,340,12,5); }
+
+ if(i<=170) {    // i<=455
+  gfx_color(250,17,17);
+  gfx_fillrectangle(3+i,390,80,30);    // body
+  gfx_color(167,219,200);
+  gfx_fillrectangle(13+i,395,10,20);  
+  gfx_color(167,219,200);
+  gfx_fillrectangle(58+i,395,10,20);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(42+i,395,12,5);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(25+i,395,12,5);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(42+i,410,12,5);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(25+i,410,12,5); }
+
+  // car stops
+  if(i>=170) {   
+  gfx_color(250,17,17);
+  gfx_fillrectangle(173,390,80,30);    // body
+  gfx_color(167,219,200);
+  gfx_fillrectangle(183,395,10,20);  
+  gfx_color(167,219,200);
+  gfx_fillrectangle(228,395,10,20);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(212,395,12,5);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(195,395,12,5);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(212,410,12,5);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(195,410,12,5); }
+
+  gfx_flush();
+  delay(1);
+
+  if(i<=170) {   // i<=814
+  gfx_color(0,0,0);
+  gfx_fillrectangle(3+i,320,80,30);    // body
+  gfx_color(0,0,0);
+  gfx_fillrectangle(13+i,325,10,20);  
+  gfx_color(0,0,0);
+  gfx_fillrectangle(58+i,325,10,20);
+  gfx_color(0,0,0);
+  gfx_fillrectangle(42+i,325,12,5);
+  gfx_color(0,0,0);
+  gfx_fillrectangle(25+i,325,12,5);
+  gfx_color(0,0,0);
+  gfx_fillrectangle(42+i,340,12,5);
+  gfx_color(0,0,0);
+  gfx_fillrectangle(25+i,340,12,5); }
+
+ if(i<=170) {    // i<=455
+  gfx_color(0,0,0);
+  gfx_fillrectangle(3+i,390,80,30);    // body
+  gfx_color(0,0,0);
+  gfx_fillrectangle(13+i,395,10,20);  
+  gfx_color(0,0,0);
+  gfx_fillrectangle(58+i,395,10,20);
+  gfx_color(0,0,0);
+  gfx_fillrectangle(42+i,395,12,5);
+  gfx_color(0,0,0);
+  gfx_fillrectangle(25+i,395,12,5);
+  gfx_color(0,0,0);
+  gfx_fillrectangle(42+i,410,12,5);
+  gfx_color(0,0,0);
+  gfx_fillrectangle(25+i,410,12,5); }
+
+ }
+  
+}
+
+void stop_car_Down(){
+
+   int i,j;
+
+   for(i=0,j=0;i <= 140, j <= 140; i = i + 5,j= j + 5)
+{
+  if(j<=140) {  // j<=400
+  gfx_color(250,17,17);
+  gfx_fillrectangle(400,820-j,30,80);    // body
+  gfx_color(167,219,200);
+  gfx_fillrectangle(405,830-j,20,10);  
+  gfx_color(167,219,200);
+  gfx_fillrectangle(405,875-j,20,10);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(405,859-j,5,12); 
+  gfx_color(167,219,200);
+  gfx_fillrectangle(405,842-j,5,12);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(420,859-j,5,12);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(420,842-j,5,12); }
+
+  // car stops
+  if(j==140) {
+  gfx_color(250,17,17);
+  gfx_fillrectangle(400,680,30,80);    // body
+  gfx_color(167,219,200);
+  gfx_fillrectangle(405,690,20,10);  
+  gfx_color(167,219,200);
+  gfx_fillrectangle(405,735,20,10);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(405,719,5,12); 
+  gfx_color(167,219,200);
+  gfx_fillrectangle(405,702,5,12);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(420,719,5,12);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(420,702,5,12); }
+
+  if(j<=140) {
+  gfx_color(250,17,17);
+  gfx_fillrectangle(312,820-j,30,80);    // body
+  gfx_color(167,219,200);
+  gfx_fillrectangle(317,830-j,20,10);  
+  gfx_color(167,219,200);
+  gfx_fillrectangle(317,875-j,20,10);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(317,859-j,5,12); 
+  gfx_color(167,219,200);
+  gfx_fillrectangle(317,842-j,5,12);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(332,859-j,5,12);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(332,842-j,5,12); }
+
+ // car stops
+  if(j==140) {
+  gfx_color(250,17,17);
+  gfx_fillrectangle(312,680,30,80);    // body
+  gfx_color(167,219,200);
+  gfx_fillrectangle(317,690,20,10);  
+  gfx_color(167,219,200);
+  gfx_fillrectangle(317,735,20,10);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(317,719,5,12); 
+  gfx_color(167,219,200);
+  gfx_fillrectangle(317,702,5,12);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(332,719,5,12);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(332,702,5,12); }
+
+  gfx_flush();
+  delay(1);
+
+  if(j<=140) { 
+  gfx_color(0,0,0);
+  gfx_fillrectangle(400,820-j,30,80);    // body
+  gfx_color(0,0,0);
+  gfx_fillrectangle(405,830-j,20,10);  
+  gfx_color(0,0,0);
+  gfx_fillrectangle(405,875-j,20,10);
+  gfx_color(0,0,0);
+  gfx_fillrectangle(405,859-j,5,12); 
+  gfx_color(0,0,0);
+  gfx_fillrectangle(405,842-j,5,12);
+  gfx_color(0,0,0);
+  gfx_fillrectangle(420,859-j,5,12);
+  gfx_color(0,0,0);
+  gfx_fillrectangle(420,842-j,5,12); }
+
+  if(j<=140) {
+  gfx_color(0,0,0);
+  gfx_fillrectangle(312,820-j,30,80);    // body
+  gfx_color(0,0,0);
+  gfx_fillrectangle(317,830-j,20,10);  
+  gfx_color(0,0,0);
+  gfx_fillrectangle(317,875-j,20,10);
+  gfx_color(0,0,0);
+  gfx_fillrectangle(317,859-j,5,12); 
+  gfx_color(0,0,0);
+  gfx_fillrectangle(317,842-j,5,12);
+  gfx_color(0,0,0);
+  gfx_fillrectangle(332,859-j,5,12);
+  gfx_color(0,0,0);
+  gfx_fillrectangle(332,842-j,5,12); }
+
+}
+}
+
+void Stop_Car_Right(){
+
+   int i,j;
+ 
+  for(i=0,j=0;i <= 480, j <= 840; i = i + 10,j = j + 10) {
+
+
+  if(i>=0&&i<=170){  //i<=400
+  gfx_color(250,17,17);
+  gfx_fillrectangle(810-i,480,80,30);    // body
+  gfx_color(167,219,200);
+  gfx_fillrectangle(820-i,485,10,20);  
+  gfx_color(167,219,200);
+  gfx_fillrectangle(865-i,485,10,20);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(849-i,485,12,5);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(832-i,485,12,5);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(849-i,500,12,5);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(832-i,500,12,5); }
+
+  // Car Stops
+  if(i>=170){
+  gfx_color(250,17,17);
+  gfx_fillrectangle(640,480,80,30);    // body
+  gfx_color(167,219,200);
+  gfx_fillrectangle(650,485,10,20);  
+  gfx_color(167,219,200);
+  gfx_fillrectangle(695,485,10,20);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(679,485,12,5);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(662,485,12,5);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(679,500,12,5);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(662,500,12,5); }
+
+  if(i<=170){  // i<=840
+  gfx_color(250,17,17);
+  gfx_fillrectangle(810-i,550,80,30);    // body
+  gfx_color(167,219,200);
+  gfx_fillrectangle(820-i,555,10,20);  
+  gfx_color(167,219,200);
+  gfx_fillrectangle(865-i,555,10,20);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(849-i,555,12,5);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(832-i,555,12,5);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(849-i,570,12,5);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(832-i,570,12,5); }
+
+  //car stops
+  if(i>=170){  // i<=840
+  gfx_color(250,17,17);
+  gfx_fillrectangle(640,550,80,30);    // body
+  gfx_color(167,219,200);
+  gfx_fillrectangle(650,555,10,20);  
+  gfx_color(167,219,200);
+  gfx_fillrectangle(695,555,10,20);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(679,555,12,5);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(662,555,12,5);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(679,570,12,5);
+  gfx_color(167,219,200);
+  gfx_fillrectangle(662,570,12,5); }
+
+  gfx_flush();
+  delay(1);
+
+  if(i>=0&&i<=170){  //i<=400
+  gfx_color(0,0,0);
+  gfx_fillrectangle(810-i,480,80,30);    // body
+  gfx_color(0,0,0);
+  gfx_fillrectangle(820-i,485,10,20);  
+  gfx_color(0,0,0);
+  gfx_fillrectangle(865-i,485,10,20);
+  gfx_color(0,0,0);
+  gfx_fillrectangle(849-i,485,12,5);
+  gfx_color(0,0,0);
+  gfx_fillrectangle(832-i,485,12,5);
+  gfx_color(0,0,0);
+  gfx_fillrectangle(849-i,500,12,5);
+  gfx_color(0,0,0);
+  gfx_fillrectangle(832-i,500,12,5); }
+
+  if(i<=170){  // i<=840
+  gfx_color(0,0,0);
+  gfx_fillrectangle(810-i,550,80,30);    // body
+  gfx_color(0,0,0);
+  gfx_fillrectangle(820-i,555,10,20);  
+  gfx_color(0,0,0);
+  gfx_fillrectangle(865-i,555,10,20);
+  gfx_color(0,0,0);
+  gfx_fillrectangle(849-i,555,12,5);
+  gfx_color(0,0,0);
+  gfx_fillrectangle(832-i,555,12,5);
+  gfx_color(0,0,0);
+  gfx_fillrectangle(849-i,570,12,5);
+  gfx_color(0,0,0);
+  gfx_fillrectangle(832-i,570,12,5); }
+
+}
+}
